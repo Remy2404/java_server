@@ -1,40 +1,60 @@
-# Minecraft Server on Koyeb
+# Minecraft Server on Railway/Koyeb
 
-This is a Docker-based Minecraft Java Edition server setup for deployment on Koyeb.
+This is a Docker-based Minecraft Java Edition server setup with a health check HTTP server for deployment on Railway or Koyeb.
 
 ## Features
 
 - Automatically downloads the latest Minecraft server version
+- Includes HTTP health check server to prevent timeouts
 - Configurable server properties
-- Ready for Koyeb deployment
+- Ready for Railway/Koyeb deployment
 
-## Deployment to Koyeb
+## Deployment
+
+### Railway Deployment
 
 1. **Push to GitHub**: Commit and push this code to a GitHub repository.
 
-2. **Create Koyeb Account**: Sign up at [koyeb.com](https://www.koyeb.com) if you haven't already.
+2. **Connect to Railway**: 
+   - Go to [railway.app](https://railway.app)
+   - Connect your GitHub repository
+   - Railway will auto-detect the Dockerfile
+
+3. **Environment Variables**:
+   - `PORT`: Set to `8080` (for health checks)
+   - `MEMORY`: Set to `1G` or `2G` depending on your plan
+
+4. **Port Configuration**: Railway will use the PORT variable for HTTP health checks. Minecraft runs on 25565 internally.
+
+5. **Public URL**: Railway provides a domain, but for Minecraft connections, you'll need the Railway TCP proxy or use the internal networking.
+
+### Koyeb Deployment
+
+1. **Push to GitHub**: Commit and push this code to a GitHub repository.
+
+2. **Create Koyeb Account**: Sign up at [koyeb.com](https://www.koyeb.com)
 
 3. **Deploy Service**:
-   - Go to your Koyeb dashboard
-   - Click "Create Service" > "Docker"
+   - Go to dashboard → Create Service → Docker
    - Connect your GitHub repository
-   - Set the following:
-     - **Dockerfile path**: `Dockerfile` (leave default)
-     - **Port**: `25565` (TCP)
-     - **Instance type**: Choose based on your needs (free tier has limitations)
-     - **Environment variables**: Add any custom settings if needed
+   - Set port: `8080` (HTTP for health checks)
+   - Add TCP port 25565 for Minecraft connections
+   - Environment variables: `MEMORY=1G`
 
-4. **Persistence**: For world data persistence, Koyeb supports volumes. Add a volume mount for `/minecraft` in the service settings.
-
-5. **Scaling**: Koyeb allows horizontal scaling, but Minecraft servers typically need a single instance.
+4. **Persistence**: Add a volume mount for `/minecraft` to persist world data.
 
 ## Configuration
 
 Edit `server.properties` to customize your server:
 - `motd`: Server message
 - `difficulty`: easy/medium/hard
-- `max-players`: Maximum players
+- `max-players`: Maximum players (keep low for free tiers)
 - `online-mode`: Set to false if you want cracked clients (not recommended)
+
+## Environment Variables
+
+- `PORT`: HTTP port for health checks (default: 8080)
+- `MEMORY`: Java heap size (default: 1G)
 
 ## Local Testing
 
@@ -42,21 +62,25 @@ To test locally with Docker:
 
 ```bash
 docker build -t minecraft-server .
-docker run -p 25565:25565 minecraft-server
+docker run -p 8080:8080 -p 25565:25565 -e PORT=8080 minecraft-server
 ```
+
+Connect Minecraft to `localhost:25565`
 
 ## Important Notes
 
-- Koyeb's free tier has CPU and memory limits that may not be sufficient for a busy server
-- Consider upgrading to a paid plan for better performance
-- Monitor resource usage in Koyeb dashboard
+- Railway/Koyeb free tiers have CPU and memory limits
+- Consider upgrading to paid plans for better performance
+- Monitor resource usage in your dashboard
 - Back up your world data regularly
+- The HTTP server only responds to health checks - actual Minecraft connections use TCP
 
 ## Troubleshooting
 
-- If the server fails to start, check the logs in Koyeb dashboard
-- Ensure port 25565 is open and accessible
-- For connection issues, verify your Minecraft client version matches the server
+- **502 Bad Gateway**: Usually means the HTTP health check server isn't responding
+- **Server crashes**: Check memory allocation and mod compatibility
+- **Connection refused**: Ensure port 25565 is properly exposed
+- **Slow performance**: Increase MEMORY or upgrade your plan
 
 ## License
 
