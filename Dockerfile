@@ -7,10 +7,10 @@ WORKDIR /minecraft
 # Install curl, jq, and python3 for downloading and keepalive
 RUN apk add --no-cache curl jq python3
 
-# Copy entrypoint script
-COPY entrypoint.sh /minecraft/entrypoint.sh
+# Copy scripts
 COPY keepalive.py /minecraft/keepalive.py
-RUN chmod +x /minecraft/entrypoint.sh /minecraft/keepalive.py
+COPY download_mods.py /minecraft/download_mods.py
+RUN chmod +x /minecraft/keepalive.py
 
 # Copy server properties
 COPY server.properties /minecraft/server.properties

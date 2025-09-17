@@ -1,5 +1,10 @@
 # Minecraft server jar (downloaded automatically)
 server.jar
+minecraft_server.jar
+fabric-server-*.jar
+
+# Mods (downloaded automatically)
+mods/*.jar
 
 # World data
 world/

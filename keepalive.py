@@ -26,47 +26,41 @@ def run_http_server():
     print(f"Health check server running on port {health_port}")
     server.serve_forever()
 
-def get_latest_version():
-    import urllib.request
-    import json
-    response = urllib.request.urlopen('https://launchermeta.mojang.com/mc/game/version_manifest.json')
-    data = json.loads(response.read().decode())
-    return data['latest']['release']
+def get_fabric_server_url():
+    # Fabric server launcher for 1.21.8
+    return 'https://meta.fabricmc.net/v2/versions/loader/1.21.8/0.17.2/1.1.0/server/jar'
 
-def get_server_url(version):
+def download_fabric_server():
+    fabric_url = get_fabric_server_url()
+    fabric_file = 'fabric-server-mc.1.21.8-loader.0.17.2-launcher.1.1.0.jar'
+    
+    print(f"Downloading Fabric server from: {fabric_url}")
     import urllib.request
-    import json
-    manifest_response = urllib.request.urlopen('https://launchermeta.mojang.com/mc/game/version_manifest.json')
-    manifest_data = json.loads(manifest_response.read().decode())
-    versions = manifest_data['versions']
-    version_url = next(v['url'] for v in versions if v['id'] == version)
-    version_response = urllib.request.urlopen(version_url)
-    version_data = json.loads(version_response.read().decode())
-    return version_data['downloads']['server']['url']
+    response = urllib.request.urlopen(fabric_url)
+    with open(fabric_file, 'wb') as f:
+        f.write(response.read())
+    print("Fabric server download complete")
+    return fabric_file
 
 def main():
     # Start HTTP health check server in background
     http_thread = threading.Thread(target=run_http_server, daemon=True)
     http_thread.start()
 
-    # Download server jar if not exists
-    jar_file = 'minecraft_server.jar'
+    # Download Fabric server jar if not exists
+    jar_file = 'fabric-server-mc.1.21.8-loader.0.17.2-launcher.1.1.0.jar'
     if not os.path.exists(jar_file):
-        print("Downloading latest Minecraft server...")
+        print("Downloading Fabric Minecraft server...")
         try:
-            latest_version = get_latest_version()
-            print(f"Latest version: {latest_version}")
-            server_url = get_server_url(latest_version)
-            print(f"Downloading from: {server_url}")
-
-            import urllib.request
-            response = urllib.request.urlopen(server_url)
-            with open(jar_file, 'wb') as f:
-                f.write(response.read())
+            jar_file = download_fabric_server()
             print("Download complete")
         except Exception as e:
             print(f"Download failed: {e}")
             sys.exit(1)
+
+    # Download Fabric API if needed
+    print("Checking for Fabric API...")
+    exec(open('download_mods.py').read())
 
     # Accept EULA
     with open('eula.txt', 'w') as f:
