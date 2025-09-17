@@ -1,11 +1,11 @@
-# Use OpenJDK 21 slim as base image (Minecraft 1.20+ requires Java 17+)
-FROM openjdk:21-slim
+# Use Eclipse Temurin JDK 21 Alpine for smaller image size
+FROM eclipse-temurin:21-jdk-alpine
 
 # Set working directory
 WORKDIR /minecraft
 
 # Install curl, jq, and python3 for downloading and keepalive
-RUN apt-get update && apt-get install -y curl jq python3 && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache curl jq python3
 
 # Copy entrypoint script
 COPY entrypoint.sh /minecraft/entrypoint.sh

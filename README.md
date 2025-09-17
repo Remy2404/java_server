@@ -1,11 +1,18 @@
 # Minecraft Server on Railway/Koyeb
 
-This is a Docker-based Minecraft Java Edition server setup with a health check HTTP server for deployment on Railway or Koyeb.
+This is a Docker-based Minecra## Important Notes
+
+- Railway/Koyeb free tiers have CPU and memory limits - **modded Minecraft servers often need 2-4GB RAM**
+- Consider upgrading to paid plans for better performance and stability
+- Monitor resource usage in your dashboard - check for OOM (Out of Memory) errors
+- Back up your world data regularly
+- The HTTP server only responds to health checks - actual Minecraft connections use TCP Edition server setup with a health check HTTP server for deployment on Railway or Koyeb.
 
 ## Features
 
 - Automatically downloads the latest Minecraft server version
 - Includes HTTP health check server to prevent timeouts
+- Uses lightweight Alpine Linux base image for better performance
 - Configurable server properties
 - Ready for Railway/Koyeb deployment
 
@@ -54,7 +61,7 @@ Edit `server.properties` to customize your server:
 ## Environment Variables
 
 - `PORT`: HTTP port for health checks (default: 8080)
-- `MEMORY`: Java heap size (default: 1G)
+- `MEMORY`: Java heap size (default: 2G - increased for modded servers)
 
 ## Local Testing
 
@@ -78,9 +85,11 @@ Connect Minecraft to `localhost:25565`
 ## Troubleshooting
 
 - **502 Bad Gateway**: Usually means the HTTP health check server isn't responding
+- **Out of Memory (OOM) errors**: Increase MEMORY environment variable or upgrade your plan
 - **Server crashes**: Check memory allocation and mod compatibility
 - **Connection refused**: Ensure port 25565 is properly exposed
 - **Slow performance**: Increase MEMORY or upgrade your plan
+- **Railway deployment failures**: Check Railway metrics for memory usage patterns
 
 ## License
 

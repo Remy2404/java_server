@@ -72,7 +72,7 @@ def main():
         f.write('eula=true\n')
 
     # Set memory limits
-    memory = os.environ.get('MEMORY', '1G')
+    memory = os.environ.get('MEMORY', '2G')
 
     # Start Minecraft server
     print("Starting Minecraft server...")
