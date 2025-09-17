@@ -1,0 +1,31 @@
+# Git
+.git
+.gitignore
+
+# Documentation
+README.md
+
+# Docker
+Dockerfile
+.dockerignore
+
+# IDE
+.vscode
+.idea
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Minecraft world data (will be generated at runtime)
+world/
+world_nether/
+world_the_end/
+logs/
+
+# Temporary files
+*.tmp
+*.bak
