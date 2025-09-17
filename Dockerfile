@@ -15,8 +15,8 @@ RUN chmod +x /minecraft/entrypoint.sh /minecraft/keepalive.py
 # Copy server properties
 COPY server.properties /minecraft/server.properties
 
-# Expose Minecraft port
-EXPOSE 25565
+# Expose ports
+EXPOSE 8080 25565
 
 # Set entrypoint
 ENTRYPOINT ["python3", "/minecraft/keepalive.py"]

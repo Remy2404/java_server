@@ -20,9 +20,10 @@ class HealthCheckHandler(BaseHTTPRequestHandler):
         pass
 
 def run_http_server():
-    port = int(os.environ.get('PORT', 8080))
-    server = HTTPServer(('0.0.0.0', port), HealthCheckHandler)
-    print(f"Health check server running on port {port}")
+    # Always use 8080 for Railway health checks
+    health_port = 8080
+    server = HTTPServer(('0.0.0.0', health_port), HealthCheckHandler)
+    print(f"Health check server running on port {health_port}")
     server.serve_forever()
 
 def get_latest_version():
@@ -74,9 +75,12 @@ def main():
     # Set memory limits (conservative for Railway free tier)
     max_memory = os.environ.get('MAX_MEMORY', '1G')
     initial_memory = os.environ.get('INITIAL_MEMORY', '512M')
+    
+    # Minecraft server always uses 25565 (Railway will proxy it)
+    minecraft_port = '25565'
 
     # Start Minecraft server
-    print("Starting Minecraft server...")
+    print(f"Starting Minecraft server on port {minecraft_port}...")
     cmd = ['java', f'-Xmx{max_memory}', f'-Xms{initial_memory}', '-jar', jar_file, 'nogui']
     print(f"Running: {' '.join(cmd)}")
 
