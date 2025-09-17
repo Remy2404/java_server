@@ -29,7 +29,8 @@ This is a Docker-based Minecra## Important Notes
 
 3. **Environment Variables**:
    - `PORT`: Set to `8080` (for health checks)
-   - `MEMORY`: Set to `1G` or `2G` depending on your plan
+   - `MAX_MEMORY`: Set to `1G` (conservative for free tier)
+   - `INITIAL_MEMORY`: Set to `512M`
 
 4. **Port Configuration**: Railway will use the PORT variable for HTTP health checks. Minecraft runs on 25565 internally.
 
@@ -46,7 +47,7 @@ This is a Docker-based Minecra## Important Notes
    - Connect your GitHub repository
    - Set port: `8080` (HTTP for health checks)
    - Add TCP port 25565 for Minecraft connections
-   - Environment variables: `MEMORY=1G`
+   - Environment variables: `MAX_MEMORY=1G`, `INITIAL_MEMORY=512M`
 
 4. **Persistence**: Add a volume mount for `/minecraft` to persist world data.
 
@@ -61,7 +62,8 @@ Edit `server.properties` to customize your server:
 ## Environment Variables
 
 - `PORT`: HTTP port for health checks (default: 8080)
-- `MEMORY`: Java heap size (default: 2G - increased for modded servers)
+- `MAX_MEMORY`: Maximum Java heap size (default: 1G - conservative for Railway)
+- `INITIAL_MEMORY`: Initial Java heap size (default: 512M)
 
 ## Local Testing
 
@@ -85,7 +87,7 @@ Connect Minecraft to `localhost:25565`
 ## Troubleshooting
 
 - **502 Bad Gateway**: Usually means the HTTP health check server isn't responding
-- **Out of Memory (OOM) errors**: Increase MEMORY environment variable or upgrade your plan
+- **Out of Memory (OOM) errors**: Increase MAX_MEMORY/INITIAL_MEMORY environment variables or upgrade your plan
 - **Server crashes**: Check memory allocation and mod compatibility
 - **Connection refused**: Ensure port 25565 is properly exposed
 - **Slow performance**: Increase MEMORY or upgrade your plan

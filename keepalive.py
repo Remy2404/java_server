@@ -71,12 +71,13 @@ def main():
     with open('eula.txt', 'w') as f:
         f.write('eula=true\n')
 
-    # Set memory limits
-    memory = os.environ.get('MEMORY', '2G')
+    # Set memory limits (conservative for Railway free tier)
+    max_memory = os.environ.get('MAX_MEMORY', '1G')
+    initial_memory = os.environ.get('INITIAL_MEMORY', '512M')
 
     # Start Minecraft server
     print("Starting Minecraft server...")
-    cmd = ['java', f'-Xmx{memory}', f'-Xms{memory}', '-jar', jar_file, 'nogui']
+    cmd = ['java', f'-Xmx{max_memory}', f'-Xms{initial_memory}', '-jar', jar_file, 'nogui']
     print(f"Running: {' '.join(cmd)}")
 
     try:

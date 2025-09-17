@@ -1,0 +1,30 @@
+# Minecraft server jar (downloaded automatically)
+server.jar
+
+# World data
+world/
+world_nether/
+world_the_end/
+
+# Logs
+logs/
+*.log
+
+# Runtime files
+eula.txt
+usercache.json
+whitelist.json
+banned-players.json
+banned-ips.json
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary
+*.tmp
+*.bak
