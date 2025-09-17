@@ -1,5 +1,5 @@
-# Use OpenJDK 21 as base image (Minecraft 1.20+ requires Java 17+)
-FROM openjdk:21-jre-slim
+# Use OpenJDK 21 slim as base image (Minecraft 1.20+ requires Java 17+)
+FROM openjdk:21-slim
 
 # Set working directory
 WORKDIR /minecraft
