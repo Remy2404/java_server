@@ -26,17 +26,22 @@ def run_http_server():
     server.serve_forever()
 
 def get_latest_version():
-    import requests
-    response = requests.get('https://launchermeta.mojang.com/mc/game/version_manifest.json')
-    return response.json()['latest']['release']
+    import urllib.request
+    import json
+    response = urllib.request.urlopen('https://launchermeta.mojang.com/mc/game/version_manifest.json')
+    data = json.loads(response.read().decode())
+    return data['latest']['release']
 
 def get_server_url(version):
-    import requests
-    manifest_response = requests.get('https://launchermeta.mojang.com/mc/game/version_manifest.json')
-    versions = manifest_response.json()['versions']
+    import urllib.request
+    import json
+    manifest_response = urllib.request.urlopen('https://launchermeta.mojang.com/mc/game/version_manifest.json')
+    manifest_data = json.loads(manifest_response.read().decode())
+    versions = manifest_data['versions']
     version_url = next(v['url'] for v in versions if v['id'] == version)
-    version_response = requests.get(version_url)
-    return version_response.json()['downloads']['server']['url']
+    version_response = urllib.request.urlopen(version_url)
+    version_data = json.loads(version_response.read().decode())
+    return version_data['downloads']['server']['url']
 
 def main():
     # Start HTTP health check server in background
@@ -53,10 +58,10 @@ def main():
             server_url = get_server_url(latest_version)
             print(f"Downloading from: {server_url}")
 
-            import requests
-            response = requests.get(server_url)
+            import urllib.request
+            response = urllib.request.urlopen(server_url)
             with open(jar_file, 'wb') as f:
-                f.write(response.content)
+                f.write(response.read())
             print("Download complete")
         except Exception as e:
             print(f"Download failed: {e}")

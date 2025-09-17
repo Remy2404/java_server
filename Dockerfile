@@ -4,10 +4,8 @@ FROM openjdk:21-slim
 # Set working directory
 WORKDIR /minecraft
 
-# Install curl, jq, python3, and requests for downloading and keepalive
-RUN apt-get update && apt-get install -y curl jq python3 python3-pip && \
-    pip3 install requests && \
-    rm -rf /var/lib/apt/lists/*
+# Install curl, jq, and python3 for downloading and keepalive
+RUN apt-get update && apt-get install -y curl jq python3 && rm -rf /var/lib/apt/lists/*
 
 # Copy entrypoint script
 COPY entrypoint.sh /minecraft/entrypoint.sh
